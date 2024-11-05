@@ -1,0 +1,38 @@
+import numpy as np
+import pandas as pd 
+from pgmpy.estimators import MaximumLikelihoodEstimator
+from pgmpy.inference  import VariableElimination
+from pgmpy.models import BayesianNetwork
+
+data=pd.read_csv("heartdisease-IR.csv")
+heart_disease=pd.DataFrame(data)
+print(heart_disease)
+
+print("\n sample instances from data")
+print(heart_disease.head())
+
+print("\n Atrributes and datatypes")
+print(heart_disease.dtypes)
+model=BayesianNetwork([
+    
+    ('age','Lifestyle'), 
+    ('diet','cholestrol'),
+    ('cholestrol','heartdisease'),
+    ('Gender','Lifestyle'),
+    ('Gender','diet'),
+    ('Family','cholestrol')
+
+
+])
+
+print("Learning CPD using max ")
+model.fit(heart_disease,estimator=MaximumLikelihoodEstimator)
+
+print("inferencing with model")
+heart_disease_infer=VariableElimination(model)
+
+print("\n Probability of heart disease given evidence age:")
+q1= heart_disease_infer.query(variables=['heartdisease'],evidence={'age':1})
+q2=heart_disease_infer.query(variables=['heartdisease'],evidence={'diet':1})
+print(q1)
+print(q2)

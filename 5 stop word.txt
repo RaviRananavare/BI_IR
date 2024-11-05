@@ -1,0 +1,28 @@
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+nltk.download('stopwords')
+nltk.download('punkt')
+
+text_document = "Text processing is an essential step in natural language processing. It includes tasks like stop word removal and stemming."
+
+words = word_tokenize(text_document)
+words
+
+stop_words = set(stopwords.words('english'))
+filtered_words = [word for word in words if word.lower() not in stop_words]
+filtered_words
+
+stemmer = PorterStemmer()
+
+stemmed_words = [stemmer.stem(word) for word in filtered_words]
+stemmed_words
+
+lemmatizer = WordNetLemmatizer()
+
+
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_words]
+lemmatized_words

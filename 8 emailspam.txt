@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from warnings import filterwarnings
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+
+df = pd.read_csv("email_spam.csv")
+df.head()
+df.isna().sum()
+
+df.shape
+
+df.dtypes
+
+df.describe()
+
+df1 = df
+df1.duplicated().sum()
+
+
+df2 = df1.drop_duplicates()
+df2.duplicated().sum()from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+df2['spam'] = df2["type"]
+df2['spam'] = le.fit_transform(df2['spam'])
+df2.head()
+df2["text"] = df2["text"].replace("\n","", regex=True)
+df2.head()
+
+x_train, x_test, y_train, y_test = train_test_split(df2['text'], df2['spam'], test_size = 0.1)
+
+v = CountVectorizer()
+x_train_count = v.fit_transform(x_train.values)
+x_test_count = v.transform(x_test)
+x_train_count.toarray()
+
+model = LogisticRegression()
+model.fit(x_train_count, y_train)
+
+model.score(x_test_count, y_test)
+
+email = ['50% discount on data science courses singup now']
+
+new_email = v.transform(email)
+ans = model.predict(new_email)
+if ans[0] == 1:
+    print("Spam")
+else:
+    print("Not Spam")

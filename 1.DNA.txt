@@ -1,0 +1,25 @@
+with open("dna_sequence.txt", "r") as file:
+    dna_sequence = file.read().strip()
+    
+gc_content = (dna_sequence.count("G") + dna_sequence.count("C")) / len(dna_sequence) * 100 
+print(f"GC Content {gc_content}%")
+ motifs_tofind = "CGT"
+ motifs_found = [str(i) for i in range(len(dna_sequence)) if dna_sequence.startswith(motifs_tofind, i)]
+ print(f"Motifs to find: {motifs_tofind} and the motifs found at the positions: {','.join(motifs_found)}")
+ start_codon = "ATG"
+ stop_codons = ["TAA","TAG","TGA"]
+ coding_regions = []
+ for i, codon in enumerate(dna_sequence):
+    if dna_sequence[i:i +3] == start_codon:
+        for j in range(i+3, len(dna_sequence), 3):
+            codon = dna_sequence[j:j + 3]
+            if codon in stop_codons:
+                coding_regions.append((i,j +3))
+                break
+        else:
+            continue
+            
+if coding_regions:
+    print("coding regions:")
+    for start, end in coding_regions:
+        print(f"start:{start}, end:{end}")
